@@ -1,0 +1,97 @@
+{
+    "openapi": "3.0.3",
+    "info": {
+      "version": "1.0.0",
+      "title": "Triangle Classification",
+      "description": "Triangle Classification API"
+    },
+    "paths": {
+      "/triangles/classification": {
+        "post": {
+          "tags": [ 
+            "Triangles" 
+          ],
+          "description": "Determine the type of a given triangle",
+          "operationId": "classification",
+          "parameters": [],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/triangle"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "description": "Triangle Classification",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/triangleClassification"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/triangles/history": {
+        "get": {
+          "tags": [ 
+            "Triangles" 
+          ],
+          "description": "Retrieve a history of checked triangle",
+          "operationId": "history",
+          "parameters": [
+            {
+              "name": "limit",
+              "in": "query"
+            },
+            {
+              "name": "lastId",
+              "in": "query"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Triangle Classification",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/triangleClassification"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "components": {
+        "schemas": {
+            "triangle": {
+                "type": "object",
+                "properties": {
+                    "sides": {
+                        "type": "array",
+                        "items": {
+                            "type":"number"
+                        }
+                    }
+                }
+            },
+            "triangleClassification": {
+                "type": "object",
+                "properties": {
+                    "type": {
+                        "type": "string",
+                        "example": "SCALENE"
+                    }
+                }
+            }
+        }
+    }
+}
