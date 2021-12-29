@@ -1,6 +1,5 @@
 const { resolve } = require('path');
 const root = resolve(__dirname);
-const jestDynamoDbPreset = require('@shelf/jest-dynamodb/jest-preset');
 
 module.exports = {
   rootDir: root,
@@ -9,6 +8,5 @@ module.exports = {
   testEnvironment: 'node',
   clearMocks: true,
   preset: 'ts-jest',
-  ...jestDynamoDbPreset,
   setupFiles: ['dotenv/config'],
 };

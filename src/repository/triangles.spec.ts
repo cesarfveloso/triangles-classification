@@ -1,45 +1,45 @@
 import { TrianglesRepository } from './triangles';
 import { TrianglesClassificationEnum } from '../models/triangles-classification.enum';
-// import DynamoDbLocal from 'dynamodb-local';
-// import { DynamoDB } from 'aws-sdk';
+import DynamoDbLocal from 'dynamodb-local';
+import { DynamoDB } from 'aws-sdk';
 
 const tableName = 'TRIANGLE_TEST';
-// const dynamoPort = 8000;
-// let db: DynamoDB;
+const dynamoPort = 8000;
+let db: DynamoDB;
 
-// beforeAll(async () => {
-//   await DynamoDbLocal.launch(dynamoPort, null, ['-inMemory'], false, true);
-//   db = new DynamoDB({
-//     endpoint: `localhost:${dynamoPort}`,
-//     sslEnabled: false,
-//   });
-// });
+beforeAll(async () => {
+  await DynamoDbLocal.launch(dynamoPort, null, ['-inMemory'], false, true);
+  db = new DynamoDB({
+    endpoint: `localhost:${dynamoPort}`,
+    sslEnabled: false,
+  });
+});
 
-// beforeEach(async () => {
-//   try {
-//     await db
-//       .deleteTable({
-//         TableName: tableName,
-//       })
-//       .promise();
-//   } catch (error: any) {
-//     if (error?.code !== 'ResourceNotFoundException') {
-//       throw error;
-//     }
-//   }
-//   await db
-//     .createTable({
-//       TableName: tableName,
-//       KeySchema: [{ AttributeName: 'id', KeyType: 'HASH' }],
-//       AttributeDefinitions: [{ AttributeName: 'id', AttributeType: 'S' }],
-//       ProvisionedThroughput: { ReadCapacityUnits: 1, WriteCapacityUnits: 1 },
-//     })
-//     .promise();
-// });
+beforeEach(async () => {
+  try {
+    await db
+      .deleteTable({
+        TableName: tableName,
+      })
+      .promise();
+  } catch (error: any) {
+    if (error?.code !== 'ResourceNotFoundException') {
+      throw error;
+    }
+  }
+  await db
+    .createTable({
+      TableName: tableName,
+      KeySchema: [{ AttributeName: 'id', KeyType: 'HASH' }],
+      AttributeDefinitions: [{ AttributeName: 'id', AttributeType: 'S' }],
+      ProvisionedThroughput: { ReadCapacityUnits: 1, WriteCapacityUnits: 1 },
+    })
+    .promise();
+});
 
-// afterAll(async () => {
-//   DynamoDbLocal.stop(dynamoPort);
-// });
+afterAll(async () => {
+  DynamoDbLocal.stop(dynamoPort);
+});
 
 describe('Triangles Repository', () => {
   describe('triangle saving', () => {
