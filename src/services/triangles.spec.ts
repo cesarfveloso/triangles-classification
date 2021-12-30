@@ -3,7 +3,7 @@ import { TrianglesClassificationEnum } from '../models/triangles-classification.
 import { TrianglesRepository } from '../repository/triangles';
 import { TrianglesService } from './triangles';
 
-describe('Triangles Service', () => {
+describe('Triangles Service Unit Tests', () => {
   describe('triangle classification', () => {
     test('Given a geometric shape with no sides, it will not be considered a triangle', () => {
       const repository = new TrianglesRepository('') as jest.Mocked<TrianglesRepository>;

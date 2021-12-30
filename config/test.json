@@ -16,13 +16,14 @@
         "level": "debug"
     },
     "morganLogs": {
+        "enabled": false,
         "style": "combined"
     },
     "auth": {
         "tokenExpiration": 180,
         "secretKey": "SECRET_KEY"
     },
-    "apiPort": 3000,
+    "apiPort": 3001,
     "rateLimit": {
         "periodMs": 1000,
         "maxRequest": 100

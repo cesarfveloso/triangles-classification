@@ -38,7 +38,9 @@ export class SetupServer extends Server {
         origin: '*',
       })
     );
-    this.app.use(morgan(config.get('morganLogs.style')));
+    if (config.has('morganLogs.enabled') && config.get('morganLogs.enabled')) {
+      this.app.use(morgan(config.get('morganLogs.style')));
+    }
     this.app.use(httpContext.middleware);
   }
 

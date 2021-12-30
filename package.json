@@ -7,6 +7,9 @@
     "type": "git",
     "url": "git@github.com:cesarfveloso/triangles-classification.git"
   },
+  "engines": {
+    "node": ">=14"
+  },
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "tsc",
@@ -15,6 +18,8 @@
     "start:debug": "export NODE_ENV=development && nodemon --exec 'node --inspect --require ts-node/register src/index.ts'",
     "lint": "eslint ./src ./test --ext .ts",
     "lint:fix": "eslint ./src ./test --ext .ts --fix",
+    "style:check": "prettier --check src/**/*.ts test/**/*.ts",
+    "test": "npm run test:unit && npm run test:e2e",
     "test:e2e": "jest --projects ./test --runInBand",
     "test:unit": "jest"
   },

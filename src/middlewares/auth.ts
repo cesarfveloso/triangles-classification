@@ -17,10 +17,7 @@ export function authMiddleware(
     next();
   } catch (error: any) {
     if (error instanceof JsonWebTokenError) {
-      if (error.message.search(/jwt must be provided/) >= 0) {
-        error.message = error.message.replace(/jwt/, 'x-access-token');
-      }
-      if (error.message.search(/jwt expired/) >= 0) {
+      if (error.message.search(/jwt/) >= 0) {
         error.message = error.message.replace(/jwt/, 'x-access-token');
       }
     }

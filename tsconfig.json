@@ -30,7 +30,7 @@
     "./src/**/*.ts",
     "./test/**/*.ts",
     "./infrastructure/**/*.ts"
-, "test/jest.config.js"  ],
+  ],
   "exclude": [
     "./node_modules/*",
     "dist",

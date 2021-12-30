@@ -13,6 +13,7 @@
         "level": "debug"
     },
     "morganLogs": {
+        "enabled": true,
         "style": "combined"
     },
     "auth": {
