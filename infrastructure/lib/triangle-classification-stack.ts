@@ -3,9 +3,7 @@ import { Construct } from 'constructs';
 import { Table, AttributeType } from 'aws-cdk-lib/aws-dynamodb';
 import { RetentionDays, LogGroup } from 'aws-cdk-lib/aws-logs';
 import { Integration, IntegrationType, RestApi, VpcLink } from 'aws-cdk-lib/aws-apigateway';
-import {} from 'aws-cdk-lib/aws-cloudwatch';
-import {} from 'aws-cdk-lib/aws-ec2';
-
+import config from 'config';
 export class TriangleClassificationStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
@@ -17,7 +15,7 @@ export class TriangleClassificationStack extends Stack {
 
   private createDynamoTable(): void {
     new Table(this, 'triangles-table', {
-      tableName: 'TRIANGLES',
+      tableName: config.get('dynamoDb.triangleTableName'),
       partitionKey: { name: 'id', type: AttributeType.STRING },
     });
   }
@@ -25,7 +23,7 @@ export class TriangleClassificationStack extends Stack {
   private createCloudWatchLogs(): void {
     new LogGroup(this, 'triangles-log-group', {
       retention: RetentionDays.ONE_WEEK,
-      logGroupName: 'TRIANGLES-API',
+      logGroupName: config.get('cloudWatchLogs.groupName'),
     });
   }
 

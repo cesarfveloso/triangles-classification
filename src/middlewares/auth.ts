@@ -20,6 +20,9 @@ export function authMiddleware(
       if (error.message.search(/jwt must be provided/) >= 0) {
         error.message = error.message.replace(/jwt/, 'x-access-token');
       }
+      if (error.message.search(/jwt expired/) >= 0) {
+        error.message = error.message.replace(/jwt/, 'x-access-token');
+      }
     }
     res.status?.(StatusCodes.FORBIDDEN).send(
       ApiError.format({

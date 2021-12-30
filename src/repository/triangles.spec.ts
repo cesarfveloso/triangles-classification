@@ -2,24 +2,42 @@ import { TrianglesRepository } from './triangles';
 import { TrianglesClassificationEnum } from '../models/triangles-classification.enum';
 import DynamoDbLocal from 'dynamodb-local';
 import { DynamoDB } from 'aws-sdk';
+import config from 'config';
 
-const tableName = 'TRIANGLE_TEST';
-const dynamoPort = 8000;
+let dynamoEndpoint: string;
+let dynamoPort: number;
+let triangleTableName: string;
 let db: DynamoDB;
 
 beforeAll(async () => {
-  await DynamoDbLocal.launch(dynamoPort, null, ['-inMemory'], false, true);
-  db = new DynamoDB({
-    endpoint: `localhost:${dynamoPort}`,
-    sslEnabled: false,
+  dynamoEndpoint = config.get('dynamoDb.endpoint');
+  dynamoPort = config.get('dynamoDb.port');
+  triangleTableName = config.get('dynamoDb.triangleTableName');
+
+  DynamoDbLocal.configureInstaller({
+    installPath: './dynamodblocal-bin',
+    downloadUrl:
+      'https://s3.sa-east-1.amazonaws.com/dynamodb-local-sao-paulo/dynamodb_local_latest.tar.gz',
   });
+
+  await DynamoDbLocal.launch(dynamoPort, null, ['-inMemory'], false, true);
+  try {
+    db = new DynamoDB({
+      endpoint: `${dynamoEndpoint}:${dynamoPort}`,
+      sslEnabled: config.get('dynamoDb.sslEnabled'),
+      region: config.get('dynamoDb.region'),
+    });
+  } catch (error) {
+    DynamoDbLocal.stop(dynamoPort);
+    throw error;
+  }
 });
 
 beforeEach(async () => {
   try {
     await db
       .deleteTable({
-        TableName: tableName,
+        TableName: triangleTableName,
       })
       .promise();
   } catch (error: any) {
@@ -27,24 +45,29 @@ beforeEach(async () => {
       throw error;
     }
   }
-  await db
-    .createTable({
-      TableName: tableName,
-      KeySchema: [{ AttributeName: 'id', KeyType: 'HASH' }],
-      AttributeDefinitions: [{ AttributeName: 'id', AttributeType: 'S' }],
-      ProvisionedThroughput: { ReadCapacityUnits: 1, WriteCapacityUnits: 1 },
-    })
-    .promise();
+  try {
+    await db
+      .createTable({
+        TableName: triangleTableName,
+        KeySchema: [{ AttributeName: 'id', KeyType: 'HASH' }],
+        AttributeDefinitions: [{ AttributeName: 'id', AttributeType: 'S' }],
+        ProvisionedThroughput: { ReadCapacityUnits: 1, WriteCapacityUnits: 1 },
+      })
+      .promise();
+  } catch (error) {
+    DynamoDbLocal.stop(dynamoPort);
+    throw error;
+  }
 });
 
 afterAll(async () => {
   DynamoDbLocal.stop(dynamoPort);
 });
 
-describe('Triangles Repository', () => {
+describe('Triangles Repository Unit Tests', () => {
   describe('triangle saving', () => {
     test('should insert item into table', async () => {
-      const repository = new TrianglesRepository(tableName);
+      const repository = new TrianglesRepository(triangleTableName);
       const objToBeSaved = {
         id: 'ID',
         sides: [1, 2, 3],
@@ -58,11 +81,11 @@ describe('Triangles Repository', () => {
           ...{ id: expect.any(String) },
         })
       );
-    }, 10000);
+    });
   });
   describe('triangle retrieving history', () => {
     test('should retrieve inserted item from table', async () => {
-      const repository = new TrianglesRepository(tableName);
+      const repository = new TrianglesRepository(triangleTableName);
       const objToBeSaved = {
         id: 'ID',
         sides: [1, 2, 3],
@@ -78,9 +101,9 @@ describe('Triangles Repository', () => {
           ...{ id: expect.any(String) },
         })
       );
-    }, 10000);
+    });
     test('should retrieve multiple inserted item from table', async () => {
-      const repository = new TrianglesRepository(tableName);
+      const repository = new TrianglesRepository(triangleTableName);
       const objToBeSaved1 = {
         id: 'ID',
         sides: [1, 2, 3],
@@ -109,9 +132,9 @@ describe('Triangles Repository', () => {
           ...{ id: expect.any(String) },
         })
       );
-    }, 10000);
+    });
     test('should retrieve multiple inserted item from table, but limited', async () => {
-      const repository = new TrianglesRepository(tableName);
+      const repository = new TrianglesRepository(triangleTableName);
       const objToBeSaved1 = {
         id: 'ID',
         sides: [1, 2, 3],
@@ -137,9 +160,9 @@ describe('Triangles Repository', () => {
       );
       const correctLastId = items.history[0].id === id1 ? id1 : id2;
       expect(items.lastIdFound).toBe(correctLastId);
-    }, 10000);
+    });
     test('should retrieve multiple inserted item from table, from the last informed', async () => {
-      const repository = new TrianglesRepository(tableName);
+      const repository = new TrianglesRepository(triangleTableName);
       const objToBeSaved1 = {
         id: 'ID',
         sides: [1, 2, 3],
@@ -175,6 +198,6 @@ describe('Triangles Repository', () => {
         })
       );
       expect(secondSearch.lastIdFound).toBe(undefined);
-    }, 10000);
+    });
   });
 });

@@ -8,5 +8,4 @@ module.exports = {
   testEnvironment: 'node',
   clearMocks: true,
   preset: 'ts-jest',
-  setupFiles: ['dotenv/config'],
 };

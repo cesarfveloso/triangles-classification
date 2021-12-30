@@ -42,12 +42,6 @@ export class TrianglesControlller {
     } catch (error) {
       if (Array.isArray(error) && error.some((x) => x instanceof ValidationError)) {
         logger.debug('some validation error', error);
-        // const validationMsg = error
-        //   .filter((x) => x instanceof ValidationError)
-        //   .reduce((acc, curr: ValidationError) => {
-        //     acc.join(curr.constraints);
-        //   }, []);
-        // @todo: handle validation error
         res.status(StatusCodes.BAD_REQUEST).send(
           ApiError.format({
             code: StatusCodes.BAD_REQUEST,

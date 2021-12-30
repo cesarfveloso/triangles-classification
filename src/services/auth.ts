@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { UserNotAuthorized } from '../models/errors/user-not-authorized-error';
-const privateKey = 'SECRET_KEY';
+import config from 'config';
 
 export interface JwtToken {
   sub: string;
@@ -21,12 +21,12 @@ export default class AuthService {
   }
 
   public static generateToken(sub: string): string {
-    return jwt.sign({ sub }, privateKey, {
-      expiresIn: 3600,
+    return jwt.sign({ sub }, config.get('auth.secretKey'), {
+      expiresIn: config.get('auth.tokenExpiration'),
     });
   }
 
   public static decodeToken(token: string): JwtToken {
-    return jwt.verify(token, privateKey) as JwtToken;
+    return jwt.verify(token, config.get('auth.secretKey')) as JwtToken;
   }
 }

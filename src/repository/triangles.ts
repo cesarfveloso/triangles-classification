@@ -3,6 +3,7 @@ import { DynamoDB } from 'aws-sdk';
 import { v4 as uuidv4 } from 'uuid';
 import { logger } from '../services/logger';
 import { DatabaseError } from '../models/errors/database-error';
+import config from 'config';
 
 export interface TriangleDocument {
   id: string;
@@ -20,10 +21,18 @@ export class TrianglesRepository {
   private ddb: DynamoDB.DocumentClient;
   private tableName: string;
   constructor(tableName: string) {
-    this.ddb = new DynamoDB.DocumentClient({
-      endpoint: process.env.DYNAMODB_ENDPOINT,
-      sslEnabled: process.env.DYNAMODB_ENDPOINT ? false : true,
-    });
+    const opts = {} as DynamoDB.ClientConfiguration;
+    if (config.has('dynamoDb.endpoint') && config.has('dynamoDb.port')) {
+      opts.endpoint = `${config.get('dynamoDb.endpoint')}:${config.get('dynamoDb.port')}`;
+    }
+    if (config.has('dynamoDb.sslEnabled')) {
+      opts.sslEnabled = config.get('dynamoDb.sslEnabled');
+    }
+    if (config.has('dynamoDb.region')) {
+      // this is not working, being necessary to set AWS_REGION env variable
+      opts.region = config.get('dynamoDb.region');
+    }
+    this.ddb = new DynamoDB.DocumentClient(opts);
     this.tableName = tableName;
   }
   async save(item: TriangleDocument): Promise<TriangleDocument> {

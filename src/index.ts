@@ -1,8 +1,8 @@
 import { SetupServer } from './server';
+import config from 'config';
 
 (async (): Promise<void> => {
-  const port = Number.isNaN(Number(process.env.PORT)) ? undefined : Number(process.env.PORT);
-  const server = new SetupServer(port);
+  const server = new SetupServer(config.get('apiPort'));
   await server.init();
   server.start();
 })();

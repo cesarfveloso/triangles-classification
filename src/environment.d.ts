@@ -1,9 +1,7 @@
 declare global {
   namespace NodeJS {
     interface ProcessEnv {
-      NODE_ENV: 'development' | 'production';
-      PORT?: string;
-      DYNAMODB_ENDPOINT?: string;
+      NODE_ENV: 'development' | 'production' | 'test';
     }
   }
 }

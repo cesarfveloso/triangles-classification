@@ -1,0 +1,27 @@
+{
+    "dynamoDb": {
+        "triangleTableName": "TRIANGLES",
+        "region": "us-east-2"
+    },
+    "cloudWatchLogs": {
+        "groupName": "triangle-api",
+        "enabled": true,
+        "level": "debug"
+    },
+    "consoleLogs": {
+        "enabled": true,
+        "level": "debug"
+    },
+    "morganLogs": {
+        "style": "combined"
+    },
+    "auth": {
+        "tokenExpiration": 3600,
+        "secretKey": "SECRET_KEY"
+    },
+    "apiPort": 3000,
+    "rateLimit": {
+        "periodMs": 1000,
+        "maxRequest": 100
+    }
+}

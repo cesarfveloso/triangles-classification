@@ -34,6 +34,7 @@ lerna-debug.log*
 !.vscode/extensions.json
 
 *.env
+dynamodblocal-bin
 
 # CDK asset staging directory
 .cdk.staging

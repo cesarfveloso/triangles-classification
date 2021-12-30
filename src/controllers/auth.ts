@@ -17,7 +17,7 @@ export class AuthController {
       const user = this.userService.find(req.body.username);
       logger.debug('checking his password', req.body.username);
       await AuthService.comparePasswords(req.body.password, user.password);
-      logger.debug('justing generating tolen', req.body.username);
+      logger.debug('justing generating token', req.body.username);
       const token = AuthService.generateToken(user.username);
       res.status(StatusCodes.OK).json({ 'x-access-token': token });
     } catch (error) {

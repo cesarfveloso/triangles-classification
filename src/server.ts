@@ -15,6 +15,7 @@ import rateLimit from 'express-rate-limit';
 import { UserService } from './services/user';
 import { AuthController } from './controllers/auth';
 import httpContext from 'express-http-context';
+import config from 'config';
 
 export class SetupServer extends Server {
   private server?: http.Server;
@@ -37,12 +38,12 @@ export class SetupServer extends Server {
         origin: '*',
       })
     );
-    this.app.use(morgan('combined'));
+    this.app.use(morgan(config.get('morganLogs.style')));
     this.app.use(httpContext.middleware);
   }
 
   private setupControllers(): void {
-    const triangleRepository = new TrianglesRepository('TRIANGLES');
+    const triangleRepository = new TrianglesRepository(config.get('dynamoDb.triangleTableName'));
     const trianglesService = new TrianglesService(triangleRepository);
     const trianglesController = new TrianglesControlller(trianglesService);
     this.addControllers([trianglesController]);
@@ -88,8 +89,8 @@ export class SetupServer extends Server {
     // see https://expressjs.com/en/guide/behind-proxies.html
     // app.set('trust proxy', 1);
     const limiter = rateLimit({
-      windowMs: 1000,
-      max: 100,
+      windowMs: config.get('rateLimit.periodMs'),
+      max: config.get('rateLimit.maxRequest'),
       standardHeaders: true,
       legacyHeaders: false,
     });
