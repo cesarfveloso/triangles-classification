@@ -11,7 +11,7 @@ export const logger = createLogger({
     new WinstonCloudWatch({
       name: 'cloudwatch',
       logGroupName: config.get('cloudWatchLogs.groupName'),
-      logStreamName: 'first',
+      logStreamName: new Date().toLocaleDateString(),
       silent: !config.get('cloudWatchLogs.enabled'),
       level: config.get('cloudWatchLogs.level'),
     }),

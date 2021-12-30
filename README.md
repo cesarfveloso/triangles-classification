@@ -38,8 +38,7 @@ npm test
 
 ```sh
 npm install -g aws-cdk-lib constructs source-map-support aws-cdk
-cdk boostrap
-cdk deploy
+npm run deploy
 ```
 
 ## Executing the api
@@ -47,17 +46,23 @@ cdk deploy
 - For docker use:
 ```sh
 docker build -t triangles-api .
-docker run -d -p 3000:3000 triangles-api
+docker run --env AWS_REGION=myregion AWS_REGION=myKey AWS_REGION=mySecret -d -p 3000:3000 triangles-api
 ```
 
 - For development env:
 ```sh
 npm install
+export AWS_REGION=myregion
+export AWS_ACCESS_KEY_ID=myKey
+export AWS_SECRET_ACCESS_KEY=mySecret
 npm run start:dev
 ```
 
 - For production env:
 ```sh
 npm install --production
+export AWS_REGION=myregion
+export AWS_ACCESS_KEY_ID=myKey
+export AWS_SECRET_ACCESS_KEY=mySecret
 npm run start:prod
 ```

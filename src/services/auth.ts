@@ -1,4 +1,3 @@
-import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { UserNotAuthorized } from '../models/errors/user-not-authorized-error';
 import config from 'config';
@@ -8,12 +7,7 @@ export interface JwtToken {
 }
 
 export default class AuthService {
-  public static async hashPassword(password: string, salt = 10): Promise<string> {
-    return await bcrypt.hash(password, salt);
-  }
-
   public static async comparePasswords(password: string, hashedPassword: string): Promise<boolean> {
-    // const match = await bcrypt.compare(password, hashedPassword);
     if (!(password === hashedPassword)) {
       throw new UserNotAuthorized();
     }
