@@ -20,7 +20,6 @@ export class TriangleClassificationStack extends Stack {
     this.createApiGateway(cnamePrefix);
     this.createDynamoTable();
     this.createCloudWatchLogs();
-    this.givePermissionsToEBRole();
   }
 
   private createEb(): string {
@@ -33,6 +32,21 @@ export class TriangleClassificationStack extends Stack {
     const app = new elasticbeanstalk.CfnApplication(this, 'triangles-app', {
       applicationName: appName,
     });
+
+    const role = new iam.Role(this, 'triangle-iam-role', {
+      assumedBy: new iam.ServicePrincipal('ec2.amazonaws.com'),
+      description: 'IAM Role for Triangle API',
+      roleName: 'aws-eb-triangle-ec2-role',
+    });
+
+    role.addManagedPolicy(ManagedPolicy.fromAwsManagedPolicyName('AWSElasticBeanstalkWebTier'));
+    role.addManagedPolicy(
+      ManagedPolicy.fromAwsManagedPolicyName('AWSElasticBeanstalkMulticontainerDocker')
+    );
+    role.addManagedPolicy(ManagedPolicy.fromAwsManagedPolicyName('AWSElasticBeanstalkWorkerTier'));
+    role.addManagedPolicy(ManagedPolicy.fromAwsManagedPolicyName('CloudWatchLogsFullAccess'));
+    role.addManagedPolicy(ManagedPolicy.fromAwsManagedPolicyName('AmazonDynamoDBFullAccess'));
+
     const optionSettingProperties: elasticbeanstalk.CfnEnvironment.OptionSettingProperty[] = [
       {
         namespace: 'aws:autoscaling:launchconfiguration',
@@ -42,7 +56,7 @@ export class TriangleClassificationStack extends Stack {
       {
         namespace: 'aws:autoscaling:launchconfiguration',
         optionName: 'IamInstanceProfile',
-        value: 'aws-elasticbeanstalk-ec2-role',
+        value: role.roleName,
       },
       {
         namespace: 'aws:elasticbeanstalk:application:environment',
@@ -121,15 +135,5 @@ export class TriangleClassificationStack extends Stack {
         },
       }
     );
-  }
-
-  private givePermissionsToEBRole() {
-    const role = iam.Role.fromRoleArn(
-      this,
-      'role',
-      `arn:aws:iam::${this.account}:role/aws-elasticbeanstalk-ec2-role`
-    );
-    role.addManagedPolicy(ManagedPolicy.fromAwsManagedPolicyName('CloudWatchLogsFullAccess'));
-    role.addManagedPolicy(ManagedPolicy.fromAwsManagedPolicyName('AmazonDynamoDBFullAccess'));
   }
 }
