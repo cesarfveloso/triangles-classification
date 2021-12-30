@@ -12,6 +12,9 @@ import { errorHandler } from './middlewares/error-handler';
 import morgan from 'morgan';
 import { logger } from './services/logger';
 import rateLimit from 'express-rate-limit';
+import { UserService } from './services/user';
+import { AuthController } from './controllers/auth';
+import httpContext from 'express-http-context';
 
 export class SetupServer extends Server {
   private server?: http.Server;
@@ -35,6 +38,7 @@ export class SetupServer extends Server {
       })
     );
     this.app.use(morgan('combined'));
+    this.app.use(httpContext.middleware);
   }
 
   private setupControllers(): void {
@@ -42,6 +46,10 @@ export class SetupServer extends Server {
     const trianglesService = new TrianglesService(triangleRepository);
     const trianglesController = new TrianglesControlller(trianglesService);
     this.addControllers([trianglesController]);
+
+    const userService = new UserService();
+    const authController = new AuthController(userService);
+    this.addControllers([authController]);
   }
 
   public getApp(): Application {

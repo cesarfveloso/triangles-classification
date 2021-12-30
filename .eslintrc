@@ -16,6 +16,6 @@
   },
   "ignorePatterns": [".eslintrc"],
   "rules": {
-    "no-console": "error",
+    "no-console": "error"
   }
 }

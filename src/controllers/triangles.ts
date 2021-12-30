@@ -1,4 +1,4 @@
-import { Controller, Get, Post } from '@overnightjs/core';
+import { ClassMiddleware, Controller, Get, Post } from '@overnightjs/core';
 import { Triangle } from '../models/triangle';
 import { TrianglesService } from '../services/triangles';
 import { validateOrReject, ValidationError } from 'class-validator';
@@ -7,14 +7,18 @@ import { StatusCodes } from 'http-status-codes';
 import { logger } from '../services/logger';
 import ApiError from '../models/errors/api-error';
 import { NotATriangleError } from '../models/errors/not-a-triangle-error';
+import { authMiddleware } from '../middlewares/auth';
+import httpContext from 'express-http-context';
 
 @Controller('triangles')
+@ClassMiddleware(authMiddleware)
 export class TrianglesControlller {
   constructor(private trianglesService: TrianglesService) {}
   @Post('classification')
   public async classification(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const user = 'DEFAULT_USER'; // @todo: implement get user by auth
+      const user = httpContext.get('userId');
+      logger.debug('look who are here', user);
       const triangle = new Triangle();
       triangle.sides = req.body.sides;
       logger.debug('validating body', req.body);
@@ -47,7 +51,7 @@ export class TrianglesControlller {
         res.status(StatusCodes.BAD_REQUEST).send(
           ApiError.format({
             code: StatusCodes.BAD_REQUEST,
-            message: 'Must inform an array of number as sides',
+            message: 'Must provide an array of number as sides',
           })
         );
       } else if (error instanceof NotATriangleError) {

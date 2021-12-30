@@ -4,6 +4,7 @@ export const logger = createLogger({
   transports: [
     new transports.Console({
       silent: false,
+      level: 'debug',
     }),
   ],
   exitOnError: false,
