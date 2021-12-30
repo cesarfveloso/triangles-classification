@@ -13,7 +13,8 @@
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "tsc",
-    "start": "node dist/src/index.js",
+    "start": "npm run build && node dist/src/index.js",
+    "start:prod": "export NODE_ENV=production && node dist/src/index.js",
     "start:dev": "export NODE_ENV=development && nodemon src/index.ts",
     "start:debug": "export NODE_ENV=development && nodemon --exec 'node --inspect --require ts-node/register src/index.ts'",
     "lint": "eslint ./src ./test --ext .ts",

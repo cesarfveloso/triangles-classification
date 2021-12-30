@@ -1,13 +1,13 @@
 {
     "dynamoDb": {
-        "triangleTableName": "TRIANGLES",
+        "triangleTableName": "TRIANGLES_TEST",
         "endpoint": "localhost",
         "port": 8000,
         "sslEnabled": false,
         "region": "local-region"
     },
     "cloudWatchLogs": {
-        "groupName": "triangle-api",
+        "groupName": "",
         "enabled": false,
         "level": "debug"
     },

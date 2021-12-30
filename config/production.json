@@ -1,15 +1,15 @@
 {
     "dynamoDb": {
-        "triangleTableName": "TRIANGLES_DEV",
+        "triangleTableName": "TRIANGLES",
         "region": "us-east-2"
     },
     "cloudWatchLogs": {
-        "groupName": "triangle-api-dev",
-        "enabled": false,
-        "level": "debug"
+        "groupName": "triangle-api",
+        "enabled": true,
+        "level": "error"
     },
     "consoleLogs": {
-        "enabled": true,
+        "enabled": false,
         "level": "debug"
     },
     "morganLogs": {
@@ -18,7 +18,7 @@
     },
     "auth": {
         "tokenExpiration": 3600,
-        "secretKey": "SECRET_KEY"
+        "secretKey": "SECRET_KEY_PRD"
     },
     "apiPort": 3000,
     "rateLimit": {
