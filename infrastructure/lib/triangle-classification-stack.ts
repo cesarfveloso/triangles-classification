@@ -47,6 +47,10 @@ export class TriangleClassificationStack extends Stack {
     role.addManagedPolicy(ManagedPolicy.fromAwsManagedPolicyName('CloudWatchLogsFullAccess'));
     role.addManagedPolicy(ManagedPolicy.fromAwsManagedPolicyName('AmazonDynamoDBFullAccess'));
 
+    const ebInstanceProfile = new iam.CfnInstanceProfile(this, 'CustomInstanceProfile', {
+      roles: [role.roleName],
+    });
+
     const optionSettingProperties: elasticbeanstalk.CfnEnvironment.OptionSettingProperty[] = [
       {
         namespace: 'aws:autoscaling:launchconfiguration',
@@ -56,7 +60,7 @@ export class TriangleClassificationStack extends Stack {
       {
         namespace: 'aws:autoscaling:launchconfiguration',
         optionName: 'IamInstanceProfile',
-        value: role.roleName,
+        value: ebInstanceProfile.attrArn,
       },
       {
         namespace: 'aws:elasticbeanstalk:application:environment',
