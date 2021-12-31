@@ -19,7 +19,7 @@
     "lint": "eslint ./src ./test --ext .ts",
     "lint:fix": "eslint ./src ./test --ext .ts --fix",
     "style:check": "prettier --check src/**/*.ts test/**/*.ts",
-    "test": "npm run test:unit && npm run test:e2e",
+    "test": "export NODE_ENV=test && npm run test:unit && npm run test:e2e",
     "test:e2e": "jest --projects ./test --runInBand",
     "test:unit": "jest",
     "deploy": "npm run build && rimraf app.zip && zip -r app.zip dist config Procfile package.json && cdk bootstrap && cdk deploy"

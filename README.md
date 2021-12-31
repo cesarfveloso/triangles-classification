@@ -37,7 +37,7 @@ npm test
 ## Creating infrastructure
 
 ```sh
-npm install -g aws-cdk-lib constructs source-map-support aws-cdk
+export NODE_ENV=production
 npm run deploy
 ```
 
@@ -66,5 +66,5 @@ export AWS_ACCESS_KEY_ID=myKey
 export AWS_SECRET_ACCESS_KEY=mySecret
 export NODE_ENV=production
 npm run build
-npm run start
+npm start
 ```
